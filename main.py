@@ -2,6 +2,10 @@
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import random
+import urllib.request
+import IAM_KEY
+from Yandex_S2T import s2t
+
 
 
 def main():
@@ -27,12 +31,23 @@ def main():
                 msg_id = parsing_str[(msg_id_start +2):msg_id_end]
                 print(msg_id)
 
+                voice_index = parsing_str.find('link_ogg')
+                voice_start = parsing_str.find(':',voice_index)
+                voice_end = parsing_str.find(',', voice_start)
+                voice_url = parsing_str[(voice_start + 3):(voice_end - 1)]
+                print(voice_url)
+                voice = urllib.request.urlopen (voice_url).read()
+                f = open('speech.ogg','wb')
+                f.write(voice)
+                f.close()
+                v2t = s2t('b1g0g1nrj67c0se5efad', IAM_KEY.key)
+                print(v2t)
+
 
                 vk.messages.delete(message_ids=msg_id, delete_for_all=1)  # осталось понять почему это не работает
 
 
-                vk.messages.send(chat_id=event.chat_id, message='Пошли вы на хуй с вашими голосовыми '
-                                                                'сообщениями', random_id=randint)
+                vk.messages.send(chat_id=event.chat_id, message=v2t, random_id=randint)
 
 
 
