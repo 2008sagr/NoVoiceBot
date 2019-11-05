@@ -7,6 +7,7 @@ import IAM_KEY
 from Yandex_S2T import s2t
 import iam_request
 import threading
+import time
 
 
 def randint():
@@ -15,6 +16,11 @@ def randint():
 
 
 
+def iam_timer():
+    iam_request.get_iam()
+    print(time.ctime())
+    threading.Timer(3600, iam_timer).start()
+
 def main():
     token = ('e454041c2d0bc35bd37e0e8437c83e42b25742216d9c57643e18c61974f29d725c3a7bd796b73f98acd56')
     vk_session = vk_api.VkApi(token=token)
@@ -22,8 +28,7 @@ def main():
     botlongpool = VkBotLongPoll(vk_session ,group_id=188220345)
     vk = vk_session.get_api()
     print('Бот запущен.')
-    t = threading.Timer(10.0, iam_request.get_iam)
-    t.start()
+    iam_timer()
     for event in botlongpool.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
             parsing_str = str(event.object.message)
@@ -39,7 +44,7 @@ def main():
 
             bot_pi_keyword = parsing_str.lower().find('бот пиздюк')
             if bot_pi_keyword>-1:
-                vk.message.send(chat_id=event.chat_id,message='я не пиздюк', random_id=randint())
+                vk.messages.send(chat_id=event.chat_id, message='Я не пиздюк!', random_id=randint())
 
             voice_msg = parsing_str.find('audio_message')
             if voice_msg > -1:
