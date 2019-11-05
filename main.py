@@ -19,27 +19,32 @@ def main():
     vk_session._auth_token()
     botlongpool = VkBotLongPoll(vk_session ,group_id=188220345)
     vk = vk_session.get_api()
+    print('Бот запущен.')
     for event in botlongpool.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
-            print(event.object)
             parsing_str = str(event.object.message)
-            bot_keyword = parsing_str.lower().find('кай ')
-            if bot_keyword>-1:
+            msg_id_index = parsing_str.find('conversation_message_id')
+            msg_id_start = parsing_str.find(':', msg_id_index)
+            msg_id_end = parsing_str.find(',', msg_id_start)
+            msg_id = parsing_str[(msg_id_start + 2):msg_id_end]
+            print(msg_id)
+
+            kai_keyword = parsing_str.lower().find('кай ')
+            if kai_keyword>-1:
                 vk.messages.send(chat_id=event.chat_id,message='Пошел нахуй этот двоичный пидор!',random_id=randint())
+
+            bot_pi_keyword = parsing_str.lower().find('бот пиздюк')
+            if bot_pi_keyword>-1:
+                vk.message.send(chat_id=event.chat_id,message='я не пиздюк', random_id=randint())
+
             voice_msg = parsing_str.find('audio_message')
             if voice_msg > -1:
                 print('Голосовое сообщение')
-                msg_id_index = parsing_str.find('conversation_message_id')
-                msg_id_start = parsing_str.find(':' ,msg_id_index)
-                msg_id_end = parsing_str.find(',' ,msg_id_start)
-                msg_id = parsing_str[(msg_id_start +2):msg_id_end]
-                print(msg_id)
-
                 voice_index = parsing_str.find('link_ogg')
                 voice_start = parsing_str.find(':',voice_index)
                 voice_end = parsing_str.find(',', voice_start)
                 voice_url = parsing_str[(voice_start + 3):(voice_end - 1)]
-                print(voice_url)
+                #print(voice_url)
                 voice = urllib.request.urlopen (voice_url).read()
                 f = open('speech.ogg','wb')
                 f.write(voice)
