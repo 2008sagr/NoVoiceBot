@@ -5,6 +5,8 @@ import random
 import urllib.request
 import IAM_KEY
 from Yandex_S2T import s2t
+import iam_request
+import threading
 
 
 def randint():
@@ -20,6 +22,8 @@ def main():
     botlongpool = VkBotLongPoll(vk_session ,group_id=188220345)
     vk = vk_session.get_api()
     print('Бот запущен.')
+    t = threading.Timer(10.0, iam_request.get_iam)
+    t.start()
     for event in botlongpool.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
             parsing_str = str(event.object.message)
