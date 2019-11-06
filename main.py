@@ -58,7 +58,7 @@ def main():
                 f = open('speech.ogg','wb')
                 f.write(voice)
                 f.close()
-                v2t = s2t('b1g0g1nrj67c0se5efad', IAM_KEY.key)
+                v2t = s2t('b1g0g1nrj67c0se5efad', IAM_KEY.key, voice)
                 print(v2t)
 
                 vk.messages.send(chat_id=event.chat_id, message=v2t, random_id=randint())
