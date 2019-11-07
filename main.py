@@ -3,12 +3,12 @@ import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import random
 import urllib.request
-import IAM_KEY
 from Yandex_S2T import s2t
 import iam_request
 import threading
 import time
 
+key = ''
 
 def randint():
     randint = random.randint(100000000, 900000000)
@@ -16,8 +16,11 @@ def randint():
 
 
 
+
+
 def iam_timer():
-    iam_request.get_iam()
+    global key
+    key = iam_request.get_iam()
     print(time.ctime())
     threading.Timer(3600, iam_timer).start()
 
@@ -55,16 +58,16 @@ def main():
                 voice_url = parsing_str[(voice_start + 3):(voice_end - 1)]
                 #print(voice_url)
                 voice = urllib.request.urlopen (voice_url).read()
-                f = open('speech.ogg','wb')
-                f.write(voice)
-                f.close()
-                v2t = s2t('b1g0g1nrj67c0se5efad', IAM_KEY.key, voice)
+                v2t = s2t('b1g0g1nrj67c0se5efad',key, voice)
                 print(v2t)
-
-                vk.messages.send(chat_id=event.chat_id, message=v2t, random_id=randint())
+                try:
+                    vk.messages.send(chat_id=event.chat_id, message=v2t, random_id=randint())
+                except:
+                    print('Ошибка отправки текста госового сообщения')
 
 
 
 if __name__ == '__main__':
+
     main()
 

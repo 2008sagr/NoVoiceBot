@@ -1,14 +1,13 @@
 import urllib.request
 import json
-import IAM_KEY
+import iam_request
 
-def s2t(folder_id, iam_token,data1):
+def s2t(folder_id,key,data1):
 
     FOLDER_ID = folder_id #'b1g0g1nrj67c0se5efad'
-    IAM_TOKEN = iam_token
+    IAM_TOKEN = key
+    #print(IAM_TOKEN)
 
-    with open ('speech.ogg', 'rb') as f:
-        data = f.read()
 
     params = "&".join([
         "topic=general",
