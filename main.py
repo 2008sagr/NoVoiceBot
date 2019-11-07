@@ -39,6 +39,7 @@ def main():
             msg_id_start = parsing_str.find(':', msg_id_index)
             msg_id_end = parsing_str.find(',', msg_id_start)
             msg_id = parsing_str[(msg_id_start + 2):msg_id_end]
+            print(parsing_str)
             print(msg_id)
 
             kai_keyword = parsing_str.lower().find('кай ')
@@ -50,20 +51,22 @@ def main():
                 vk.messages.send(chat_id=event.chat_id, message='Я не пиздюк!', random_id=randint())
 
             voice_msg = parsing_str.find('audio_message')
-            if voice_msg > -1:
-                print('Голосовое сообщение')
-                voice_index = parsing_str.find('link_ogg')
-                voice_start = parsing_str.find(':',voice_index)
-                voice_end = parsing_str.find(',', voice_start)
-                voice_url = parsing_str[(voice_start + 3):(voice_end - 1)]
-                #print(voice_url)
-                voice = urllib.request.urlopen (voice_url).read()
-                v2t = s2t('b1g0g1nrj67c0se5efad',key, voice)
-                print(v2t)
-                try:
-                    vk.messages.send(chat_id=event.chat_id, message=v2t, random_id=randint())
-                except:
-                    print('Ошибка отправки текста госового сообщения')
+            fwd_msg = parsing_str.find("fwd_messages': []")
+            if fwd_msg > -1:
+                if voice_msg > -1:
+                    print('Голосовое сообщение')
+                    voice_index = parsing_str.find('link_ogg')
+                    voice_start = parsing_str.find(':',voice_index)
+                    voice_end = parsing_str.find(',', voice_start)
+                    voice_url = parsing_str[(voice_start + 3):(voice_end - 1)]
+                    #print(voice_url)
+                    voice = urllib.request.urlopen (voice_url).read()
+                    v2t = s2t('b1g0g1nrj67c0se5efad',key, voice)
+                    print(v2t)
+                    try:
+                        vk.messages.send(chat_id=event.chat_id, message=v2t, random_id=randint())
+                    except:
+                        print('Ошибка отправки текста госового сообщения')
 
 
 
