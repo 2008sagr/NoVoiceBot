@@ -39,7 +39,7 @@ def main():
             msg_id_start = parsing_str.find(':', msg_id_index)
             msg_id_end = parsing_str.find(',', msg_id_start)
             msg_id = parsing_str[(msg_id_start + 2):msg_id_end]
-            print(parsing_str)
+            #print(parsing_str)
             print(msg_id)
 
             kai_keyword = parsing_str.lower().find('кай ')
