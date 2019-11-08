@@ -8,14 +8,10 @@ import iam_request
 import threading
 import time
 
-key = ''
 
 def randint():
     randint = random.randint(100000000, 900000000)
     return (randint)
-
-
-
 
 
 def iam_timer():
@@ -23,7 +19,6 @@ def iam_timer():
     key = iam_request.get_iam()
     print(time.ctime())
     threading.Timer(3600, iam_timer).start()
-
 
 
 def main():
@@ -85,8 +80,6 @@ def main():
                         print('Ошибка отправки текста госового сообщения')
 
 
-
 if __name__ == '__main__':
-
     main()
 

@@ -9,14 +9,9 @@ def get_iam():
     index = res.text.find('iamToken')
     start = res.text.find(':', index)
     end = res.text.find(',',start)
-
     iam_key = res.text[(start+3):(end-1)]
     print('Ключ обновлен')
     return (iam_key)
-
-
-
-
 
 
 if __name__ == ('__main__'):
