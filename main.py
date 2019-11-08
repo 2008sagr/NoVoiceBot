@@ -24,6 +24,8 @@ def iam_timer():
     print(time.ctime())
     threading.Timer(3600, iam_timer).start()
 
+
+
 def main():
     token = ('e454041c2d0bc35bd37e0e8437c83e42b25742216d9c57643e18c61974f29d725c3a7bd796b73f98acd56')
     vk_session = vk_api.VkApi(token=token)
@@ -39,7 +41,20 @@ def main():
             msg_id_start = parsing_str.find(':', msg_id_index)
             msg_id_end = parsing_str.find(',', msg_id_start)
             msg_id = parsing_str[(msg_id_start + 2):msg_id_end]
-            #print(parsing_str)
+
+            usr_id_start = parsing_str.find("from_id': ")
+            usr_id_end = parsing_str.find(',', usr_id_start)
+            usr_id = parsing_str[(usr_id_start+10):usr_id_end]
+
+            vk_user = vk.users.get(user_ids=usr_id, fields='', name_case='Nom')
+            first_name_start = str(vk_user).find('first_name')
+            first_name_end = str(vk_user).find(',', first_name_start)
+            first_name = str(vk_user)[(first_name_start + 14):first_name_end - 1]
+
+            last_name_start = str(vk_user).find('last_name')
+            last_name_end = str(vk_user).find(',', last_name_start)
+            last_name = str(vk_user)[(last_name_start + 13):(last_name_end - 1)]
+
             print(msg_id)
 
             kai_keyword = parsing_str.lower().find('кай ')
@@ -62,9 +77,10 @@ def main():
                     #print(voice_url)
                     voice = urllib.request.urlopen (voice_url).read()
                     v2t = s2t('b1g0g1nrj67c0se5efad',key, voice)
-                    print(v2t)
                     try:
-                        vk.messages.send(chat_id=event.chat_id, message=v2t, random_id=randint())
+                        message = ('[' + first_name + ' ' + last_name + ']:\n' + v2t)
+                        print(v2t)
+                        vk.messages.send(chat_id=event.chat_id, message=message, random_id=randint())
                     except:
                         print('Ошибка отправки текста госового сообщения')
 
