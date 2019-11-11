@@ -20,6 +20,13 @@ def iam_timer():
     print(time.ctime())
     threading.Timer(3600, iam_timer).start()
 
+def parse_str(string,word):
+    id_index = string.find(word)
+    id_start = string.find(':', id_index)
+    id_end = string.find(',', id_start)
+    id = string[(id_start + 2):id_end]
+    return (id)
+
 
 def main():
     token = ('e454041c2d0bc35bd37e0e8437c83e42b25742216d9c57643e18c61974f29d725c3a7bd796b73f98acd56')
