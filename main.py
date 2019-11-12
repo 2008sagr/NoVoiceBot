@@ -48,19 +48,7 @@ def main():
             usr_id_end = parsing_str.find(',', usr_id_start)
             usr_id = parsing_str[(usr_id_start+10):usr_id_end]
 
-            try:
-                vk_user = vk.users.get(user_ids=usr_id, fields='', name_case='Nom')
-                first_name_start = str(vk_user).find('first_name')
-                first_name_end = str(vk_user).find(',', first_name_start)
-                first_name = str(vk_user)[(first_name_start + 14):first_name_end - 1]
 
-                last_name_start = str(vk_user).find('last_name')
-                last_name_end = str(vk_user).find(',', last_name_start)
-                last_name = str(vk_user)[(last_name_start + 13):(last_name_end - 1)]
-            except:
-                first_name = ''
-                last_name = ''
-                print ('Не смог получить имя')
 
             print(msg_id)
 
@@ -76,6 +64,19 @@ def main():
             fwd_msg = parsing_str.find("fwd_messages': []")
             if fwd_msg > -1:
                 if voice_msg > -1:
+                    try:
+                        vk_user = vk.users.get(user_ids=usr_id, fields='', name_case='Nom')
+                        first_name_start = str(vk_user).find('first_name')
+                        first_name_end = str(vk_user).find(',', first_name_start)
+                        first_name = str(vk_user)[(first_name_start + 14):first_name_end - 1]
+
+                        last_name_start = str(vk_user).find('last_name')
+                        last_name_end = str(vk_user).find(',', last_name_start)
+                        last_name = str(vk_user)[(last_name_start + 13):(last_name_end - 1)]
+                    except:
+                        first_name = ''
+                        last_name = ''
+                        print('Не смог получить имя')
                     print('Голосовое сообщение')
                     voice_index = parsing_str.find('link_ogg')
                     voice_start = parsing_str.find(':',voice_index)
