@@ -48,14 +48,19 @@ def main():
             usr_id_end = parsing_str.find(',', usr_id_start)
             usr_id = parsing_str[(usr_id_start+10):usr_id_end]
 
-            vk_user = vk.users.get(user_ids=usr_id, fields='', name_case='Nom')
-            first_name_start = str(vk_user).find('first_name')
-            first_name_end = str(vk_user).find(',', first_name_start)
-            first_name = str(vk_user)[(first_name_start + 14):first_name_end - 1]
+            try:
+                vk_user = vk.users.get(user_ids=usr_id, fields='', name_case='Nom')
+                first_name_start = str(vk_user).find('first_name')
+                first_name_end = str(vk_user).find(',', first_name_start)
+                first_name = str(vk_user)[(first_name_start + 14):first_name_end - 1]
 
-            last_name_start = str(vk_user).find('last_name')
-            last_name_end = str(vk_user).find(',', last_name_start)
-            last_name = str(vk_user)[(last_name_start + 13):(last_name_end - 1)]
+                last_name_start = str(vk_user).find('last_name')
+                last_name_end = str(vk_user).find(',', last_name_start)
+                last_name = str(vk_user)[(last_name_start + 13):(last_name_end - 1)]
+            except:
+                first_name = ''
+                last_name = ''
+                print ('Не смог получить имя')
 
             print(msg_id)
 
@@ -80,8 +85,11 @@ def main():
                     voice = urllib.request.urlopen (voice_url).read()
                     v2t = s2t('b1g0g1nrj67c0se5efad',key, voice)
                     try:
-                        message = ('[' + first_name + ' ' + last_name + ']:\n' + v2t)
-                        print(v2t)
+                        if first_name != '':
+                            message = ('[' + first_name + ' ' + last_name + ']:\n' + v2t)
+                            print(message)
+                        else:
+                            message = v2t
                         vk.messages.send(chat_id=event.chat_id, message=message, random_id=randint())
                     except:
                         print('Ошибка отправки текста госового сообщения')
