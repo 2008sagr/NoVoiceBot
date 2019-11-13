@@ -7,6 +7,8 @@ from Yandex_S2T import s2t
 import iam_request
 import threading
 import time
+import  json
+import  ast
 
 
 def randint():
@@ -20,13 +22,6 @@ def iam_timer():
     print(time.ctime())
     threading.Timer(3600, iam_timer).start()
 
-def parse_str(string,word):
-    id_index = string.find(word)
-    id_start = string.find(':', id_index)
-    id_end = string.find(',', id_start)
-    id = string[(id_start + 2):id_end]
-    return (id)
-
 
 def main():
     token = ('e454041c2d0bc35bd37e0e8437c83e42b25742216d9c57643e18c61974f29d725c3a7bd796b73f98acd56')
@@ -39,18 +34,11 @@ def main():
     for event in botlongpool.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
             parsing_str = str(event.object.message)
-            msg_id_index = parsing_str.find('conversation_message_id')
-            msg_id_start = parsing_str.find(':', msg_id_index)
-            msg_id_end = parsing_str.find(',', msg_id_start)
-            msg_id = parsing_str[(msg_id_start + 2):msg_id_end]
-
-            usr_id_start = parsing_str.find("from_id': ")
-            usr_id_end = parsing_str.find(',', usr_id_start)
-            usr_id = parsing_str[(usr_id_start+10):usr_id_end]
-
-
-
-            print(msg_id)
+            parsed_str = ast.literal_eval(parsing_str)
+            msg_id = parsed_str['conversation_message_id']
+            usr_id = parsed_str['from_id']
+            #print(usr_id)
+            print( msg_id)
 
             kai_keyword = parsing_str.lower().find('кай ')
             if kai_keyword>-1:
@@ -66,13 +54,12 @@ def main():
                 if voice_msg > -1:
                     try:
                         vk_user = vk.users.get(user_ids=usr_id, fields='', name_case='Nom')
-                        first_name_start = str(vk_user).find('first_name')
-                        first_name_end = str(vk_user).find(',', first_name_start)
-                        first_name = str(vk_user)[(first_name_start + 14):first_name_end - 1]
+                        len_str = len(str(vk_user))
+                        vk_user_str = (str(vk_user)[1:(len_str-1)])
+                        vk_user_parsed = ast.literal_eval(vk_user_str)
+                        first_name = vk_user_parsed['first_name']
+                        last_name = vk_user_parsed['last_name']
 
-                        last_name_start = str(vk_user).find('last_name')
-                        last_name_end = str(vk_user).find(',', last_name_start)
-                        last_name = str(vk_user)[(last_name_start + 13):(last_name_end - 1)]
                     except:
                         first_name = ''
                         last_name = ''
