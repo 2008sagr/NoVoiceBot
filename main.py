@@ -7,7 +7,6 @@ from Yandex_S2T import s2t
 import iam_request
 import threading
 import time
-import  json
 import  ast
 
 
@@ -18,7 +17,7 @@ def randint():
 
 def iam_timer():
     global key
-    key = iam_request.get_iam()
+    key = iam_request.get_iam2()
     print(time.ctime())
     threading.Timer(3600, iam_timer).start()
 

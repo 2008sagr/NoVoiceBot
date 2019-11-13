@@ -1,6 +1,15 @@
 import requests
 
 
+def get_iam2():
+    import json
+    url = 'https://iam.api.cloud.yandex.net/iam/v1/tokens'
+    data = ({'yandexPassportOauthToken':'AgAAAAAQWYPqAATuwdP2CpbVsUPOu0sQ8Fht7sE'})
+    res = requests.post(url, json=data)
+    responce = json.loads(res.text)
+    iam_key = responce["iamToken"]
+    print('Ключ обновлен')
+    return (iam_key)
 
 def get_iam():
     url = 'https://iam.api.cloud.yandex.net/iam/v1/tokens'
@@ -15,5 +24,5 @@ def get_iam():
 
 
 if __name__ == ('__main__'):
-    get_iam()
+    get_iam2()
 
