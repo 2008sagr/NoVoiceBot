@@ -9,6 +9,8 @@ import threading
 import time
 import  ast
 
+usr_dict = {1:1}
+
 
 def randint():
     randint = random.randint(100000000, 900000000)
@@ -20,6 +22,7 @@ def iam_timer():
     key = iam_request.get_iam2()
     print(time.ctime())
     threading.Timer(3600, iam_timer).start()
+    global usr_dict = {1:1}
 
 
 def main():
@@ -30,7 +33,7 @@ def main():
     vk = vk_session.get_api()
     print('Бот запущен.')
     iam_timer()
-    usr_dict = {1:1}
+
     kick_msg = False
     for event in botlongpool.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
@@ -52,17 +55,17 @@ def main():
                 vk.messages.send(chat_id=event.chat_id, message='Я не пиздюк!', random_id=randint())
 
             voice_msg = parsing_str.find('audio_message')
-            fwd_msg = parsing_str.find("fwd_messages': []")
+            fwd_msg = parsing_str.find('reply_message')
             if fwd_msg > -1:
                 if voice_msg > -1:
                     if event.chat_id <4:
-                        d = usr_dict.get(usr_id)
+                        d = global usr_dict.get(usr_id)
                         if d is not None:
                             if int(d) > 2:
                                 print('Превышен лимит')
                                 kick_msg = True
                             else:
-                                usr_dict[usr_id] = int(d) + 1
+                               global usr_dict[usr_id] = int(d) + 1
                         else:
                             usr_dict[usr_id] = 1
                             print('Первое предупреждение')
@@ -84,13 +87,7 @@ def main():
                     voice_start = parsing_str.find(':',voice_index)
                     voice_end = parsing_str.find(',', voice_start)
                     voice_url = parsing_str[(voice_start + 3):(voice_end - 1)]
-
-
-
                     voice = urllib.request.urlopen (voice_url).read()
-
-
-
                     v2t = s2t('b1g0g1nrj67c0se5efad',key, voice)
                     try:
                         if first_name != '':
