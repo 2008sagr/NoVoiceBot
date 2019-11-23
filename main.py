@@ -30,18 +30,22 @@ def main():
     vk = vk_session.get_api()
     print('Бот запущен.')
     iam_timer()
+    usr_dict = {1:1}
+    kick_msg = False
     for event in botlongpool.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
             parsing_str = str(event.object.message)
             parsed_str = ast.literal_eval(parsing_str)
             msg_id = parsed_str['conversation_message_id']
             usr_id = parsed_str['from_id']
-            #print(usr_id)
+            print(parsing_str)
+            if event.chat_id == 2:
+                print('Тестовый чат')
+            if event.chat_id == 3:
+                print('Пошлый Чат')
+            if event.chat_id == 4:
+                print('Ламповый Чат')
             print( msg_id)
-
-            kai_keyword = parsing_str.lower().find('кай ')
-            if kai_keyword>-1:
-                vk.messages.send(chat_id=event.chat_id,message='Пошел нахуй этот двоичный пидор!',random_id=randint())
 
             bot_pi_keyword = parsing_str.lower().find('бот пиздюк')
             if bot_pi_keyword>-1:
@@ -51,6 +55,18 @@ def main():
             fwd_msg = parsing_str.find("fwd_messages': []")
             if fwd_msg > -1:
                 if voice_msg > -1:
+                    if event.chat_id <4:
+                        d = usr_dict.get(usr_id)
+                        if d is not None:
+                            if int(d) > 2:
+                                print('Превышен лимит')
+                                kick_msg = True
+                            else:
+                                usr_dict[usr_id] = int(d) + 1
+                        else:
+                            usr_dict[usr_id] = 1
+                            print('Первое предупреждение')
+
                     try:
                         vk_user = vk.users.get(user_ids=usr_id, fields='', name_case='Nom')
                         len_str = len(str(vk_user))
@@ -68,12 +84,24 @@ def main():
                     voice_start = parsing_str.find(':',voice_index)
                     voice_end = parsing_str.find(',', voice_start)
                     voice_url = parsing_str[(voice_start + 3):(voice_end - 1)]
-                    #print(voice_url)
+
+
+
                     voice = urllib.request.urlopen (voice_url).read()
+
+
+
                     v2t = s2t('b1g0g1nrj67c0se5efad',key, voice)
                     try:
                         if first_name != '':
-                            message = ('[' + first_name + ' ' + last_name + ']:\n' + v2t)
+                            if kick_msg == True:
+                                message = ('[' + first_name + ' ' + last_name + ']:\n' +
+                                           'Мне обсалютно настрать на ваше удобсто, '
+                                           'делаю как удобно мне!\n' +
+                                           'Пизданул следующее:\n'+ v2t)
+                                kick_msg = False
+                            else:
+                                message = ('[' + first_name + ' ' + last_name + ']:\n' + v2t)
                             print(message)
                         else:
                             message = v2t
