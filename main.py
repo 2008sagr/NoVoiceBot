@@ -8,6 +8,7 @@ import iam_request
 import threading
 import time
 import  ast
+import Wit_ai
 
 usr_dict = {1:1}
 
@@ -22,7 +23,8 @@ def iam_timer():
     key = iam_request.get_iam2()
     print(time.ctime())
     threading.Timer(3600, iam_timer).start()
-    global usr_dict = {1:1}
+    global usr_dict
+    usr_dict = {1: 1}
 
 
 def main():
@@ -33,7 +35,7 @@ def main():
     vk = vk_session.get_api()
     print('Бот запущен.')
     iam_timer()
-
+    global usr_dict
     kick_msg = False
     for event in botlongpool.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
@@ -41,7 +43,7 @@ def main():
             parsed_str = ast.literal_eval(parsing_str)
             msg_id = parsed_str['conversation_message_id']
             usr_id = parsed_str['from_id']
-            print(parsing_str)
+            #print(parsing_str)
             if event.chat_id == 2:
                 print('Тестовый чат')
             if event.chat_id == 3:
@@ -56,16 +58,16 @@ def main():
 
             voice_msg = parsing_str.find('audio_message')
             fwd_msg = parsing_str.find('reply_message')
-            if fwd_msg > -1:
+            if fwd_msg < 0:
                 if voice_msg > -1:
                     if event.chat_id <4:
-                        d = global usr_dict.get(usr_id)
+                        d = usr_dict.get(usr_id)
                         if d is not None:
-                            if int(d) > 2:
+                            if int(d) > 4:
                                 print('Превышен лимит')
                                 kick_msg = True
                             else:
-                               global usr_dict[usr_id] = int(d) + 1
+                               usr_dict[usr_id] = int(d) + 1
                         else:
                             usr_dict[usr_id] = 1
                             print('Первое предупреждение')
@@ -93,9 +95,9 @@ def main():
                         if first_name != '':
                             if kick_msg == True:
                                 message = ('[' + first_name + ' ' + last_name + ']:\n' +
-                                           'Мне обсалютно настрать на ваше удобсто, '
-                                           'делаю как удобно мне!\n' +
-                                           'Пизданул следующее:\n'+ v2t)
+                                           'Напоминаю о лимите в 5 сообщений в час\n'
+                                           'Скоро за превышение будет пред.\n' +
+                                           'Текст сообщения:\n'+ v2t)
                                 kick_msg = False
                             else:
                                 message = ('[' + first_name + ' ' + last_name + ']:\n' + v2t)
