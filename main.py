@@ -51,26 +51,23 @@ def main():
             if event.chat_id == 4:
                 print('Ламповый Чат')
             print( msg_id)
-
             bot_pi_keyword = parsing_str.lower().find('бот пиздюк')
             if bot_pi_keyword>-1:
                 vk.messages.send(chat_id=event.chat_id, message='Я не пиздюк!', random_id=randint())
-
-            voice_msg = parsing_str.find('audio_message')
-            fwd_msg = parsing_str.find('reply_message')
-            if fwd_msg < 0:
-                if voice_msg > -1:
-                    if event.chat_id <4:
-                        d = usr_dict.get(usr_id)
-                        if d is not None:
-                            if int(d) > 4:
-                                print('Превышен лимит')
-                                kick_msg = True
-                            else:
-                               usr_dict[usr_id] = int(d) + 1
+            try:
+                ogg_url = parsed_str['attachments'][0]['audio_message']['link_ogg']
+                print(ogg_url)
+                if event.chat_id <4:
+                    d = usr_dict.get(usr_id)
+                    if d is not None:
+                        if int(d) > 4:
+                            print('Превышен лимит')
+                            kick_msg = True
                         else:
-                            usr_dict[usr_id] = 1
-                            print('Первое предупреждение')
+                            usr_dict[usr_id] = int(d) + 1
+                    else:
+                        usr_dict[usr_id] = 1
+                        print('Первое предупреждение')
 
                     try:
                         vk_user = vk.users.get(user_ids=usr_id, fields='', name_case='Nom')
@@ -79,17 +76,12 @@ def main():
                         vk_user_parsed = ast.literal_eval(vk_user_str)
                         first_name = vk_user_parsed['first_name']
                         last_name = vk_user_parsed['last_name']
-
                     except:
                         first_name = ''
                         last_name = ''
                         print('Не смог получить имя')
                     print('Голосовое сообщение')
-                    voice_index = parsing_str.find('link_ogg')
-                    voice_start = parsing_str.find(':',voice_index)
-                    voice_end = parsing_str.find(',', voice_start)
-                    voice_url = parsing_str[(voice_start + 3):(voice_end - 1)]
-                    voice = urllib.request.urlopen (voice_url).read()
+                    voice = urllib.request.urlopen (ogg_url).read()
                     v2t = s2t('b1g0g1nrj67c0se5efad',key, voice)
                     try:
                         if first_name != '':
@@ -107,6 +99,8 @@ def main():
                         vk.messages.send(chat_id=event.chat_id, message=message, random_id=randint())
                     except:
                         print('Ошибка отправки текста госового сообщения')
+            except:
+                pass
 
 
 if __name__ == '__main__':
