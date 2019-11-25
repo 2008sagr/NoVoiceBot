@@ -8,7 +8,7 @@ import iam_request
 import threading
 import time
 import  ast
-import Wit_ai
+
 
 usr_dict = {1:1}
 
