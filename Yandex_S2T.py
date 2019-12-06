@@ -2,6 +2,8 @@ import urllib.request
 import json
 
 
+
+
 def s2t(folder_id,key,data1):
     FOLDER_ID = folder_id #'b1g0g1nrj67c0se5efad'
     IAM_TOKEN = key
@@ -22,10 +24,14 @@ def s2t(folder_id,key,data1):
 
         if decodedData.get("error_code") is None:
             #print(decodedData.get("result"))
+            f = open('speech.ogg', 'wb')
+            f.write(data1)
+            f.close()
             return (decodedData.get('result'))
+
+
     except:
-        print(('Ошибка запроса к Yandex'))
-        
+        print('Ошибка Yandex')
 
 if __name__ == '__main__':
     print(s2t("b1g0g1nrj67c0se5efad", IAM_KEY.key))

@@ -7,7 +7,8 @@ from Yandex_S2T import s2t
 import iam_request
 import threading
 import time
-import  ast
+import ast
+import WitAi
 
 
 usr_dict = {1:1}
@@ -56,6 +57,7 @@ def main():
                 vk.messages.send(chat_id=event.chat_id, message='Я не пиздюк!', random_id=randint())
             try:
                 ogg_url = parsed_str['attachments'][0]['audio_message']['link_ogg']
+                mp3_url = parsed_str['attachments'][0]['audio_message']['link_mp3']
                 print(ogg_url)
                 if event.chat_id <4:
                     d = usr_dict.get(usr_id)
@@ -68,7 +70,6 @@ def main():
                     else:
                         usr_dict[usr_id] = 1
                         print('Первое предупреждение')
-
                     try:
                         vk_user = vk.users.get(user_ids=usr_id, fields='', name_case='Nom')
                         len_str = len(str(vk_user))
@@ -82,7 +83,11 @@ def main():
                         print('Не смог получить имя')
                     print('Голосовое сообщение')
                     voice = urllib.request.urlopen (ogg_url).read()
-                    v2t = s2t('b1g0g1nrj67c0se5efad',key, voice)
+                    mp3 = urllib.request.urlopen (mp3_url).read()
+                    try:
+                        v2t = WitAi.recognize(mp3)
+                    except:
+                        v2t = s2t('b1g0g1nrj67c0se5efad',key, voice)
                     try:
                         if first_name != '':
                             if kick_msg == True:
